@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Symptom Checker</title>
+    <style>
+        /* Styles for HTML elements */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .result-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+            position: relative;
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .result-card h2 {
+            margin-bottom: 10px;
+        }
+
+        .result-card-content {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .card select {
+            margin-top: 10px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .doctor-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 180px;
+        }
+
+        .doctor-button:hover {
+            background-color: #45a049;
+        }
+
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
+
+        .popup-container.active {
+            display: block;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #888;
+        }
+
+         /* Styles for the contact form */
+         .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group textarea {
+            height: 150px;
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* doctor Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+  
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced Symptom Checker</h1>
+        <!-- Step 1: Select Gender -->
+        <div id="step-1" class="step active">
+            <p>Select your gender:</p>
+            <div class="buttons">
+                <button class="button" onclick="selectGender('male')">Male</button>
+                <button class="button" onclick="selectGender('female')">Female</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Enter Age -->
+        <div id="step-2" class="step">
+            <p>Enter your age:</p>
+            <input type="number" id="age-input" min="0" max="120">
+            <div class="buttons">
+                <button class="button" onclick="selectAge()">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Select Symptoms -->
+        <div id="step-3" class="step">
+            <p>Select your symptoms:</p>
+            <div id="symptom-cards" class="symptom-cards">
+                <!-- Symptom cards will be dynamically created here -->
+            </div>
+            <button id="check-conditions" class="button" onclick="checkConditions()">Check Conditions</button>
+        </div>
+
+        
+        <!--<div id="result" class="result-card">
+          <button class="close-button" onclick="closeResult()">X</button>
+            <h2>Results</h2>
+            <div class="result-card-content"></div>
+            <button class="doctor-button" onclick="suggestDoctor()">Connect Doctor</button>
+        </div>-->
+        
+        <!-- Result Card -->
+<div id="result" class="result-card">
+    <button class="close-button" onclick="closeResult()">X</button>
+    <h2>Results</h2>
+    <div class="result-card-content"></div>
+    <button id="connect-doctor" class="button" style="margin-top: 10px;" onclick="result()">Connect with Doctor</button>
+</div>
+
+<!-- Modal -->
+<div id="doctorModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Contact Information</h2>
+        <p id="doctorName"></p>
+        <p id="doctorSpecialty"></p>
+        <p id="doctorContact"></p>
+    </div>
+</div>
+
+    </div>
+    
+     <!-- Popup container -->
+     <div id="popup" class="popup-container" >
+        <span class="close-button" onclick="closePopup()">X</span>
+       <!--Contact Form-->
+        <div class="container">
+            <h2>Contact Us</h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Send Message</button>
+                </div>
+            </form>
+        </div>
+        <p>If you have any questions or concerns, please feel free to contact us.</p>
+        
+    </div>
+    <script>
+        // JavaScript code
+
+       // connect your doctor
+        function result() {
+            window.location.href="../SymptoCare/consultancy.html";
+        }
+
+        // gender
+        let userSelection = {
+            gender: '',
+            age: '',
+            symptoms: {}
+        };
+
+        function selectGender(gender) {
+            userSelection.gender = gender;
+            showStep(2);
+        }
+        //age
+        function selectAge() {
+            const ageInput = document.getElementById('age-input').value;
+            if (ageInput) {
+                userSelection.age = parseInt(ageInput);
+                generateSymptomCards();
+                showStep(3);
+            } else {
+                alert("Please enter a valid age.");
+            }
+        }
+
+        function showStep(stepNumber) {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach(step => step.classList.remove('active'));
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+        }
+
+        function generateSymptomCards() {
+            const age = userSelection.age;
+            const gender = userSelection.gender;
+            let ageGroup = '';
+
+            if (age <= 12) {
+                ageGroup = 'child';
+            } else if (age <= 60) {
+                ageGroup = 'adult';
+            } else {
+                ageGroup = 'elderly';
+            }
+
+            const symptomCardsDiv = document.getElementById('symptom-cards');
+            symptomCardsDiv.innerHTML = '';
+
+            if (conditions[ageGroup] && conditions[ageGroup][gender]) {
+                for (let symptom in conditions[ageGroup][gender]) {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+
+                    const title = document.createElement('h3');
+                    title.innerText = symptom.charAt(0).toUpperCase() + symptom.slice(1);
+                    card.appendChild(title);
+
+const select = document.createElement('select');
+select.innerHTML = `
+    <option value="0">None</option>
+    <option value="1">Low</option>
+    <option value="2">Medium</option>
+    <option value="3">High</option>
+`;
+select.setAttribute('data-symptom', symptom);
+card.appendChild(select);
+
+symptomCardsDiv.appendChild(card);
+}
+}
+}
+
+function checkConditions() {
+const gender = userSelection.gender;
+const age = userSelection.age;
+let ageGroup = '';
+
+if (age <= 12) {
+ageGroup = 'child';
+} else if (age <= 60) {
+ageGroup = 'adult';
+} else {
+ageGroup = 'elderly';
+}
+
+const selects = document.querySelectorAll('.card select');
+const symptomFrequency = {};
+
+selects.forEach(select => {
+const frequency = parseInt(select.value);
+if (frequency > 0) {
+const symptom = select.getAttribute('data-symptom');
+symptomFrequency[symptom] = frequency;
+}
+});
+
+const possibleConditions = {};
+if (conditions[ageGroup] && conditions[ageGroup][gender]) {
+for (let [symptom, frequency] of Object.entries(symptomFrequency)) {
+for (let [condition, weight] of Object.entries(conditions[ageGroup][gender][symptom])) {
+    if (possibleConditions[condition]) {
+        possibleConditions[condition] += weight * frequency;
+    } else {
+        possibleConditions[condition] = weight * frequency;
+    }
+}
+}
+}
+
+const sortedConditions = Object.entries(possibleConditions).sort((a, b) => b[1] - a[1]);
+
+let resultText = `You belong to the ${ageGroup} category.<br>`;
+resultText += "Based on your symptoms, you might have the following conditions:<br>";
+if (sortedConditions.length > 0) {
+sortedConditions.forEach(([condition, score]) => {
+resultText += `=> ${condition} (score: ${score})<br>`;
+});
+// Suggested doctor based on the highest scoring condition
+const topCondition = sortedConditions[0][0];
+const doctor = getDoctorForCondition(topCondition);
+resultText += `<br>Suggested Doctor: ${doctor}`;
+} else {
+resultText = "No matching conditions found. Please consult a healthcare professional.";
+}
+
+// Insert the results into the result card
+const resultCard = document.querySelector('.result-card-content');
+resultCard.innerHTML = resultText;
+
+// Show the result card
+const resultDiv = document.getElementById('result');
+resultDiv.style.display = 'block';
+}
+
+function closeResult() {
+const resultDiv = document.getElementById('result');
+resultDiv.style.display = 'none';
+}
+
+function suggestDoctor() {
+const resultCard = document.querySelector('.result-card-content');
+const suggestedDoctor = resultCard.lastElementChild.textContent.split(': ')[1];
+
+alert(`Suggested Doctor: ${suggestedDoctor}`);
+}
+/*
+// Sample conditions and doctors data
+const conditions = {
+"child": {
+"male": {
+"fever": {"Flu": 2, "Common Cold": 1, "COVID-19": 2, "Chickenpox": 3},
+"cough": {"Common Cold": 1, "Flu": 2, "COVID-19": 2, "Asthma": 3},
+},
+"female": {
+"fever": {"Flu": 2, "Common Cold": 1, "COVID-19": 2, "Chickenpox": 3},
+"cough": {"Common Cold": 1, "Flu": 2, "COVID-19": 2, "Asthma": 3},
+}
+},
+"adult": {
+"male": {
+"headache": {"Migraine": 3, "Tension Headache": 2, "Flu": 1, "COVID-19": 2},
+"fatigue": {"Anemia": 2, "Hypothyroidism": 3, "Diabetes": 2, "Flu": 1},
+},
+"female": {
+"nausea": {"Food Poisoning": 3, "Gastritis": 2, "Pregnancy": 3, "Flu": 1},
+"fatigue": {"Anemia": 2, "Hypothyroidism": 3, "Diabetes": 2, "Flu": 1},
+}
+},
+"elderly": {
+"male": {
+"fever": {"Flu": 2, "COVID-19": 2, "Pneumonia": 3, "Urinary Tract Infection": 2},
+"cough": {"Bronchitis": 3, "Flu": 2, "COVID-19": 2, "COPD": 3},
+},
+"female": {
+"fever": {"Flu": 2, "COVID-19": 2, "Pneumonia": 3, "Urinary Tract Infection": 2},
+"cough": {"Bronchitis": 3, "Flu": 2, "COVID-19": 2, "COPD": 3},
+}
+}
+};
+*/
+/*
+const conditions = {
+    "child": {
+        "male": {
+            "fever": {"Flu": 2, "Common Cold": 1, "COVID-19": 2, "Chickenpox": 3},
+            "cough": {"Common Cold": 1, "Flu": 2, "COVID-19": 2, "Asthma": 3},
+            "stomachache": {"Gastroenteritis": 3, "Constipation": 2, "Appendicitis": 3}
+            // Add more symptoms here
+        },
+        "female": {
+            "fever": {"Flu": 2, "Common Cold": 1, "COVID-19": 2, "Chickenpox": 3},
+            "cough": {"Common Cold": 1, "Flu": 2, "COVID-19": 2, "Asthma": 3},
+            "stomachache": {"Gastroenteritis": 3, "Constipation": 2, "Appendicitis": 3}
+            // Add more symptoms here
+        }
+    },
+    "adult": {
+        "male": {
+            "headache": {"Migraine": 3, "Tension Headache": 2, "Flu": 1, "COVID-19": 2},
+            "fatigue": {"Anemia": 2, "Hypothyroidism": 3, "Diabetes": 2, "Flu": 1},
+            "back pain": {"Muscle Strain": 2, "Herniated Disc": 3, "Arthritis": 2}
+            // Add more symptoms here
+        },
+        "female": {
+            "nausea": {"Food Poisoning": 3, "Gastritis": 2, "Pregnancy": 3, "Flu": 1},
+            "fatigue": {"Anemia": 2, "Hypothyroidism": 3, "Diabetes": 2, "Flu": 1},
+            "back pain": {"Muscle Strain": 2, "Herniated Disc": 3, "Arthritis": 2}
+            // Add more symptoms here
+        }
+    },
+    "elderly": {
+        "male": {
+            "fever": {"Flu": 2, "COVID-19": 2, "Pneumonia": 3, "Urinary Tract Infection": 2},
+            "cough": {"Bronchitis": 3, "Flu": 2, "COVID-19": 2, "COPD": 3},
+            "joint pain": {"Arthritis": 3, "Osteoporosis": 2, "Bursitis": 2}
+            // Add more symptoms here
+        },
+        "female": {
+            "fever": {"Flu": 2, "COVID-19": 2, "Pneumonia": 3, "Urinary Tract Infection": 2},
+            "cough": {"Bronchitis": 3, "Flu": 2, "COVID-19": 2, "COPD": 3},
+            "joint pain": {"Arthritis": 3, "Osteoporosis": 2, "Bursitis": 2}
+            // Add more symptoms here
+        }
+    }
+};    */
+const conditions = {
+    "child": {
+        "male": {
+            "fever": {"Flu": 2, "Common Cold": 1, "COVID-19": 2, "Chickenpox": 3},
+            "cough": {"Common Cold": 1, "Flu": 2, "COVID-19": 2, "Asthma": 3},
+            "stomachache": {"Gastroenteritis": 3, "Constipation": 2, "Appendicitis": 3},
+            "earache": {"Ear Infection": 3, "Swimmer's Ear": 2, "Foreign Object": 1},
+            "rash": {"Allergic Reaction": 2, "Eczema": 3, "Poison Ivy": 2},
+            "vomiting": {"Gastroenteritis": 3, "Food Poisoning": 2, "Appendicitis": 2},
+            "diarrhea": {"Gastroenteritis": 3, "Food Poisoning": 2, "Appendicitis": 2},
+            "headache": {"Migraine": 3, "Tension Headache": 2, "Sinusitis": 2},
+            "fatigue": {"Anemia": 2, "Sleep Deprivation": 3, "Mononucleosis": 2},
+            "runny nose": {"Common Cold": 2, "Allergies": 2, "Sinusitis": 3}
+        },
+        "female": {
+            "fever": {"Flu": 2, "Common Cold": 1, "COVID-19": 2, "Chickenpox": 3},
+            "cough": {"Common Cold": 1, "Flu": 2, "COVID-19": 2, "Asthma": 3},
+            "stomachache": {"Gastroenteritis": 3, "Constipation": 2, "Appendicitis": 3},
+            "earache": {"Ear Infection": 3, "Swimmer's Ear": 2, "Foreign Object": 1},
+            "rash": {"Allergic Reaction": 2, "Eczema": 3, "Poison Ivy": 2},
+            "vomiting": {"Gastroenteritis": 3, "Food Poisoning": 2, "Appendicitis": 2},
+            "diarrhea": {"Gastroenteritis": 3, "Food Poisoning": 2, "Appendicitis": 2},
+            "headache": {"Migraine": 3, "Tension Headache": 2, "Sinusitis": 2},
+            "fatigue": {"Anemia": 2, "Sleep Deprivation": 3, "Mononucleosis": 2},
+            "runny nose": {"Common Cold": 2, "Allergies": 2, "Sinusitis": 3}
+        }
+    },
+    "adult": {
+        "male": {
+            "headache": {"Migraine": 3, "Tension Headache": 2, "Flu": 1, "COVID-19": 2},
+            "fatigue": {"Anemia": 2, "Hypothyroidism": 3, "Diabetes": 2, "Flu": 1},
+            "back pain": {"Muscle Strain": 2, "Herniated Disc": 3, "Arthritis": 2},
+            "dizziness": {"Vertigo": 3, "Dehydration": 2, "Anemia": 1},
+            "chest pain": {"Heart Attack": 3, "Angina": 2, "Costochondritis": 2},
+            "shortness of breath": {"Asthma": 3, "Pneumonia": 2, "Anemia": 2},
+            "sore throat": {"Strep Throat": 3, "Common Cold": 2, "Tonsillitis": 2},
+            "abdominal pain": {"Gastritis": 3, "Appendicitis": 3, "Kidney Stones": 2},
+            "joint pain": {"Arthritis": 3, "Gout": 2, "Bursitis": 2},
+            "difficulty sleeping": {"Insomnia": 3, "Sleep Apnea": 2, "Restless Leg Syndrome": 2}
+        },
+        "female": {
+            "nausea": {"Food Poisoning": 3, "Gastritis": 2, "Pregnancy": 3, "Flu": 1},
+            "fatigue": {"Anemia": 2, "Hypothyroidism": 3, "Diabetes": 2, "Flu": 1},
+"back pain": {"Muscle Strain": 2, "Herniated Disc": 3, "Arthritis": 2},
+"dizziness": {"Vertigo": 3, "Dehydration": 2, "Anemia": 1},
+"chest pain": {"Heart Attack": 3, "Angina": 2, "Costochondritis": 2},
+"shortness of breath": {"Asthma": 3, "Pneumonia": 2, "Anemia": 2},
+"sore throat": {"Strep Throat": 3, "Common Cold": 2, "Tonsillitis": 2},
+"abdominal pain": {"Gastritis": 3, "Appendicitis": 3, "Kidney Stones": 2},
+"joint pain": {"Arthritis": 3, "Gout": 2, "Bursitis": 2},
+"difficulty sleeping": {"Insomnia": 3, "Sleep Apnea": 2, "Restless Leg Syndrome": 2}
+}
+},
+"elderly": {
+"male": {
+"fever": {"Flu": 2, "COVID-19": 2, "Pneumonia": 3, "Urinary Tract Infection": 2},
+"cough": {"Bronchitis": 3, "Flu": 2, "COVID-19": 2, "COPD": 3},
+"fatigue": {"Anemia": 2, "Heart Failure": 3, "Chronic Fatigue Syndrome": 2},
+"weakness": {"Malnutrition": 2, "Heart Failure": 3, "Deconditioning": 2},
+"loss of appetite": {"Cancer": 3, "Depression": 2, "Medication Side Effects": 1},
+"confusion": {"Dementia": 3, "Delirium": 2, "UTI": 1},
+"incontinence": {"Urinary Incontinence": 3, "Constipation": 2, "UTI": 2},
+"falls": {"Osteoporosis": 3, "Muscle Weakness": 2, "Vertigo": 2},
+"constipation": {"Dehydration": 3, "Medication Side Effects": 2, "IBS": 2},
+"sleep disturbances": {"Insomnia": 3, "Sleep Apnea": 2, "Restless Leg Syndrome": 2}
+},
+"female": {
+"fever": {"Flu": 2, "COVID-19": 2, "Pneumonia": 3, "Urinary Tract Infection": 2},
+"cough": {"Bronchitis": 3, "Flu": 2, "COVID-19": 2, "COPD": 3},
+"fatigue": {"Anemia": 2, "Heart Failure": 3, "Chronic Fatigue Syndrome": 2},
+"weakness": {"Malnutrition": 2, "Heart Failure": 3, "Deconditioning": 2},
+"loss of appetite": {"Cancer": 3, "Depression": 2, "Medication Side Effects": 1},
+"confusion": {"Dementia": 3, "Delirium": 2, "UTI": 1},
+"incontinence": {"Urinary Incontinence": 3, "Constipation": 2, "UTI": 2},
+"falls": {"Osteoporosis": 3, "Muscle Weakness": 2, "Vertigo": 2},
+"constipation": {"Dehydration": 3, "Medication Side Effects": 2, "IBS": 2},
+"sleep disturbances": {"Insomnia": 3, "Sleep Apnea": 2, "Restless Leg Syndrome": 2}
+}
+}
+};
+
+
+function getDoctorForCondition(condition) {
+// Sample data for suggested doctors
+/*   const doctors = {
+"Flu": "General Physician",
+"COVID-19": "Infectious Disease Specialist",
+"Common Cold": "General Physician",
+"Chickenpox": "Pediatrician",
+"Asthma": "Pulmonologist",
+"Migraine": "Neurologist",
+"Tension Headache": "Neurologist",
+"Anemia": "Hematologist",
+"Hypothyroidroidism": "Endocrinologist",
+"Diabetes": "Endocrinologist",
+"Food Poisoning": "Gastroenterologist",
+"Gastritis": "Gastroenterologist",
+"Pregnancy": "Obstetrician-Gynecologist",
+"Pneumonia": "Pulmonologist",
+"Urinary Tract Infection": "Urologist",
+"Bronchitis": "Pulmonologist",
+"COPD": "Pulmonologist"
+};  */
+
+const doctors = {
+    "Flu": "General Physician",
+    "COVID-19": "Infectious Disease Specialist",
+    "Common Cold": "General Physician",
+    "Chickenpox": "Pediatrician",
+    "Asthma": "Pulmonologist",
+    "Migraine": "Neurologist",
+    "Tension Headache": "Neurologist",
+    "Anemia": "Hematologist",
+    "Hypothyroidroidism": "Endocrinologist",
+    "Diabetes": "Endocrinologist",
+    "Food Poisoning": "Gastroenterologist",
+    "Gastritis": "Gastroenterologist",
+    "Pregnancy": "Obstetrician-Gynecologist",
+    "Pneumonia": "Pulmonologist",
+    "Urinary Tract Infection": "Urologist",
+    "Bronchitis": "Pulmonologist",
+    "COPD": "Pulmonologist",
+    "Hypertension": "Cardiologist",
+    "Heart Attack": "Cardiologist",
+    "Stroke": "Neurologist",
+    "Arthritis": "Rheumatologist",
+    "Osteoporosis": "Endocrinologist",
+    "Kidney Stones": "Urologist",
+    "Liver Disease": "Hepatologist",
+    "Depression": "Psychiatrist",
+    "Anxiety": "Psychiatrist",
+    "Epilepsy": "Neurologist",
+    "Alzheimer's Disease": "Neurologist",
+    "Dementia": "Neurologist",
+    "Atrial Fibrillation": "Cardiologist",
+    "Thyroid Disorders": "Endocrinologist",
+    "Cancer": "Oncologist",
+    "Chronic Obstructive Pulmonary Disease (COPD)": "Pulmonologist",
+    "Rheumatoid Arthritis": "Rheumatologist",
+    "Multiple Sclerosis": "Neurologist"
+};
+
+return doctors[condition] || "General Physician";
+}
+
+ // Function to display the pop-up after 2 minutes
+ function displayPopup() {
+            const popup = document.getElementById('popup');
+            popup.classList.add('active');
+        }
+
+        // Function to close the pop-up
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            popup.classList.remove('active');
+        }
+
+        // Set a timeout to display the pop-up after 2 minutes (120000 milliseconds)
+        setTimeout(displayPopup, 30000); // 2 minutes = 120000 milliseconds 
+
+          // JavaScript code to handle form submission
+          const contactForm = document.getElementById('contact-form');
+
+contactForm.addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get form data
+    const formData = new FormData(contactForm);
+
+    // Example: Send form data to a server-side script for processing (not included in this example)
+    // You can use XMLHttpRequest, Fetch API, or any other method to send data to your server
+    // Example using Fetch API:
+    fetch('/submit-contact-form', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // Handle success
+            alert('Your message has been sent. We will get back to you soon.');
+            contactForm.reset(); // Clear the form
+        } else {
+            // Handle error
+            alert('An error occurred. Please try again later.');
+        }
+    })
+    .catch(error => {
+        // Handle network error
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+    });
+        });
+        
+        //doctor modal related
+   document.getElementById('connect-doctor').addEventListener('click', connectDoctor);
+
+function connectDoctor() {
+    const topCondition = sortedConditions[0][0]; // Assuming sortedConditions is accessible
+    const doctor = getDoctorForCondition(topCondition);
+
+    // Populate modal with doctor information
+    document.getElementById('doctorName').innerText = `Doctor: ${doctor}`;
+    document.getElementById('doctorSpecialty').innerText = `Specialty: ${doctors[doctor]}`;
+    document.getElementById('doctorContact').innerText = "Contact Information: <Add contact details here>";
+
+    // Show modal
+    const modal = document.getElementById('doctorModal');
+    modal.style.display = 'block';
+}
+
+function closeModal() {
+    const modal = document.getElementById('doctorModal');
+    modal.style.display = 'none';
+}
+
+</script>
+</body>
+</html>
+

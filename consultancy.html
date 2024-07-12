@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Consultancy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgb(240, 241, 242);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 1200px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .doctor-card {
+            background-color: #e6f3f5;
+            border: 1px solid #10a5ad;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            text-align: left;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .doctor-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .doctor-card p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .doctor-card a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .doctor-card a:hover {
+            text-decoration: underline;
+        }
+
+        .doctor-contact {
+            margin-top: 10px;
+        }
+
+        .doctor-image {
+            max-width: 100px;
+            margin-right: 20px;
+        }
+
+        .doctor-info {
+            flex-grow: 1;
+        }
+
+        .doctor-card-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 1024px) {
+            .doctor-card-wrapper {
+                flex-direction: row;
+                text-align: center;
+            }
+
+            .doctor-image {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+        .logo{
+               background-color: #dfe2e2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="assets/images/logo.png" alt="Logo" height="100px" weight="100px" border-radius="50%">
+        </div>
+    <div class="container">
+        <h1>Doctor Consultancy</h1>
+        <div id="doctor-list">
+            <!-- Doctor profiles will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        const doctors = [
+            { name: "Dr. John Smith", specialization: "General Physician", experience: "10 years", location: "Hyderabad", bio:"Dr. John Smith is a board-certified general physician with a decade of experience...", contact: { phone: "9234567890", email: "drjohn@example.com", website: "https://example.com/drjohn" }},
+            { name: "Dr. Emily Johnson", specialization: "Cardiologist", experience: "15 years", location: "Secunderbad", bio: "Dr. Emily Johnson is a renowned cardiologist specializing in heart diseases...", contact: { phone: "9876543210", email: "drej@example.com", website: "https://example.com/drej" }},
+            { name: "Dr. Michael Davis", specialization: "Dermatologist", experience: "12 years", location: "Uppal", bio: "Dr. Michael Davis is a dermatologist with expertise in skin conditions...", contact: { phone: "9567890123", email: "drmike@example.com", website: "https://example.com/drmike" }},
+            { name: "Dr. Sarah Thompson", specialization: "Pediatrician", experience: "8 years", location: "Ameerpet", bio: "Dr. Sarah Thompson specializes in pediatric care for infants and children...", contact: { phone: "7890123456", email: "dr.sarah@example.com", website: "https://example.com/drsarah" }},
+            { name: "Dr. Robert Wilson", specialization: "Orthopedic Surgeon", experience: "20 years", location: "Old City", bio: "Dr. Robert Wilson is an orthopedic surgeon focusing on bone and joint disorders...", contact: { phone: "9123456789", email: "dr.robert@example.com", website: "https://example.com/drrobert" }},
+            { name: "Dr. Lisa Green", specialization: "Neurologist", experience: "14 years", location: "Kukatpally", bio: "Dr. Lisa Green is a leading neurologist known for her expertise in treating neurological disorders...", contact: { phone: "9345678901", email: "dr.lisa@example.com", website: "https://example.com/drlisa" }},
+            { name: "Dr. James Brown", specialization: "Oncologist", experience: "18 years", location: "Madhapur", bio: "Dr. James Brown is an oncologist with extensive experience in cancer treatment...", contact: { phone: "9456789012", email: "dr.james@example.com", website: "https://example.com/drjames" }},
+            { name: "Dr. Nancy Miller", specialization: "Endocrinologist", experience: "16 years", location: "Begumpet", bio: "Dr. Nancy Miller specializes in endocrine system disorders and diabetes management...", contact: { phone: "9567890123", email: "dr.nancy@example.com", website: "https://example.com/drnancy" }},
+            { name: "Dr. William Moore", specialization: "Gastroenterologist", experience: "22 years", location: "S R Nagar", bio: "Dr. William Moore is a gastroenterologist with a focus on digestive system health...", contact: { phone: "9678901234", email: "dr.william@example.com", website: "https://example.com/drwilliam" }},
+            { name: "Dr. Karen White", specialization: "Psychiatrist", experience: "16 years", location: "ECIL", bio: "Dr. Karen White is a psychiatrist specializing in mental health and mood disorders...", contact: { phone: "9567890123", email: "dr.karen@example.com", website: "https://example.com/drkaren" }},
+            { name: "Dr. Timothy Lee", specialization: "Dentist", experience: "14 years", location: "Malkagagiri", bio: "Dr. Timothy Lee is a dentist providing comprehensive dental care services...", contact: { phone: "9678901234", email: "dr.timothy@example.com", website: "https://example.com/drtimothy" }},
+            { name: "Dr. Jessica Adams", specialization: "Allergist", experience: "12 years", location: "Moula Ali", bio: "Dr. Jessica Adams specializes in diagnosing and treating allergies and immune system disorders...", contact: { phone: "6789012345", email: "dr.jessica@example.com", website: "https://example.com/drjessica" }},
+            { name: "Dr. Benjamin Turner", specialization: "Plastic Surgeon", experience: "20 years", location: "Tarnaka", bio: "Dr. Benjamin Turner is a plastic surgeon known for his expertise in cosmetic and reconstructive procedures...", contact: { phone: "7890123456", email: "dr.benjamin@example.com", website: "https://example.com/drbenjamin" }},
+            { name: "Dr. Elizabeth Parker", specialization: "Dermatologist", experience: "16 years", location: "Hubsiguda", bio: "Dr. Elizabeth Parker specializes in medical and cosmetic dermatology...", contact: { phone: "8901234567", email: "dr.elizabeth@example.com", website: "https://example.com/drelizabeth" }},
+            { name: "Dr. Christopher Hill", specialization: "Otolaryngologist", experience: "18 years", location: "Nagole", bio: "Dr. Christopher Hill is an otolaryngologist providing care for ear, nose, and throat disorders...", contact: { phone: "9012345678", email: "dr.christopher@example.com", website: "https://example.com/drchristopher" }},
+            { name: "Dr. Sandra Turner", specialization: "Obstetrician", experience: "15 years", location: "LB Nagar", bio: "Dr. Sandra Turner is an obstetrician specializing in pregnancy and childbirth care...", contact: { phone: "9123456789", email: "dr.sandra@example.com", website: "https://example.com/drsandra" }},
+            { name: "Dr. Anthony Lewis", specialization: "Podiatrist", experience: "14 years", location: "Mettuguda", bio: "Dr. Anthony Lewis is a podiatrist specializing in foot and ankle disorders...", contact: { phone: "9234567890", email: "dr.anthony@example.com", website: "https://example.com/dranthony" }},
+            { name: "Dr. Rachel Young", specialization: "Family Physician", experience: "16 years", location: "NarapLly", bio: "Dr. Rachel Young provides comprehensive primary care services for individuals and families...", contact: { phone: "9345678901", email: "dr.rachel@example.com", website: "https://example.com/drrachel" }},
+            { name: "Dr. Mark Turner", specialization: "Neonatologist", experience: "20 years", location: "Raidurga", bio: "Dr. Mark Turner is a neonatologist specializing in the care of newborn infants...", contact: { phone: "6456789012", email: "dr.mark@example.com", website: "https://example.com/drmark" }},
+            { name: "Dr. Megan Hill", specialization: "Geriatrician", experience: "18 years", location: "Medipally", bio: "Dr. Megan Hill specializes in providing medical care for elderly patients...", contact: { phone: "9567890123", email: "dr.megan@example.com", website: "https://example.com/drmegan" }},
+            { name: "Dr. Kevin Clark", specialization: "Sports Medicine Physician", experience: "15 years", location: "Alwal", bio: "Dr. Kevin Clark is a sports medicine physician specializing in the treatment of sports-related injuries...", contact: { phone: "9678901234", email: "dr.kevin@example.com", website: "https://example.com/drkevin" }},
+            { name: "Dr. Christina Moore", specialization: "Psychologist", experience: "12 years", location: "Koti", bio: "Dr. Christina Moore is a clinical psychologist providing counseling and therapy services...", contact: { phone: "6789012345", email: "dr.christina@example.com", website: "https://example.com/drchristina" }},
+            { name: "Dr. Andrew Adams", specialization: "Rheumatologist", experience: "17 years", location: "Miyapur", bio: "Dr. Andrew Adams specializes in diagnosing and treating autoimmune and inflammatory disorders...", contact: { phone: "7890123456", email: "dr.andrew@example.com", website: "https://example.com/drandrew" }},
+            { name: "Dr. Stephanie Roberts", specialization: "Dietitian", experience: "14 years", location: "Old City", bio: "Dr. Stephanie Roberts is a registered dietitian providing nutrition counseling and dietary guidance...", contact: { phone: "9012345678", email: "dr.stephanie@example.com", website: "https://example.com/drstephanie" }},
+            { name: "Dr. Kimberly Garcia", specialization: "Oncologist", experience: "19 years", location: "Charminar", bio: "Dr. Kimberly Garcia is an oncologist with expertise in diagnosing and treating various types of cancer...", contact: { phone: "9123456789", email: "dr.kimberly@example.com", website: "https://example.com/drkimberly" }},
+            { name: "Dr. Nathan Hall", specialization: "Anesthesiologist", experience: "15 years", location: "Narapally", bio: "Dr. Nathan Hall is an anesthesiologist providing pain management and anesthesia services...", contact: { phone: "9634567890", email: "dr.nathan@example.com", website: "https://example.com/drnathan" }},
+            { name: "Dr. Lauren Lewis", specialization: "Hematologist", experience: "18 years", location: "Moula Ali", bio: "Dr. Lauren Lewis specializes in the diagnosis and treatment of blood disorders and cancers...", contact: { phone: "9345678901", email: "dr.lauren@example.com", website: "https://example.com/drlauren" }},
+            { name: "Dr. Peter Young", specialization: "Neurosurgeon", experience: "20 years", location: "Kukatpally", bio: "Dr. Peter Young is a neurosurgeon specializing in surgical treatment of brain and spine disorders...", contact: { phone: "9456789012", email: "dr.peter@example.com", website: "https://example.com/drpeter" }},
+            { name: "Dr. Jessica Martinez", specialization: "Psychiatrist", experience: "16 years", location: "Chikadpally", bio: "Dr. Jessica Martinez specializes in diagnosing and treating mental health disorders...", contact: { phone: "9567890123", email: "dr.jessica@example.com", website: "https://example.com/drjessica" }},
+            { name: "Dr. Daniel Clark", specialization: "Urologist", experience: "14 years", location: "Raidurga", bio: "Dr. Daniel Clark is a urologist providing surgical and non-surgical treatment for urological conditions...", contact: { phone: "9678901234", email: "dr.daniel@example.com", website: "https://example.com/drdaniel" }},
+            { name: "Dr. Rachel Moore", specialization: "Pulmonologist", experience: "13 years", location: "Hyderguda", bio: "Dr. Rachel Moore specializes in the diagnosis and treatment of lung and respiratory disorders...", contact: { phone: "7789012345", email: "dr.rachel@example.com", website: "https://example.com/drrachel" }},
+            { name: "Dr. Matthew Turner", specialization: "Gastroenterologist", experience: "17 years", location: "Jubliee Hills", bio: "Dr. Matthew Turner is a gastroenterologist providing care for digestive system disorders...", contact: { phone: "7890123456", email: "dr.matthew@example.com", website: "https://example.com/drmatthew" }},
+            { name: "Dr. Olivia White", specialization: "Orthopedic Surgeon", experience: "21 years", location: "Medchel", bio: "Dr. Olivia White specializes in surgical and non-surgical treatment of bone and joint conditions...", contact: { phone: "8901234567", email: "dr.olivia@example.com", website: "https://example.com/drolivia" }},
+            { name: "Dr. Michael Harris", specialization: "Cardiologist", experience: "19 years", location: "Medipally", bio: "Dr. Michael Harris is a cardiologist with expertise in diagnosing and treating heart diseases...", contact: { phone: "9012345678", email: "dr.michael@example.com", website: "https://example.com/drmichael" }},
+            { name: "Dr. Sophia Rodriguez", specialization: "Dermatologist", experience: "15 years", location: "Narapally", bio: "Dr. Sophia Rodriguez specializes in medical and cosmetic dermatology...", contact: { phone: "9823456789", email: "dr.sophia@example.com", website: "https://example.com/drsophia" }},
+            { name: "Dr. Ethan Turner", specialization: "Ophthalmologist", experience: "12 years", location: "Nizampet", bio: "Dr. Ethan Turner is an ophthalmologist providing comprehensive eye care services...", contact: { phone: "6234567890", email: "dr.ethan@example.com", website: "https://example.com/drethan" }},
+            { name: "Dr. Madison Hall", specialization: "Neurologist", experience: "18 years", location: "Charminar", bio: "Dr. Madison Hall is a neurologist specializing in the diagnosis and treatment of neurological disorders...", contact: { phone: "9345678901", email: "dr.madison@example.com", website: "https://example.com/drmadison" }},
+            { name: "Dr. Ryan Carter", specialization: "Orthodontist", experience: "16 years", location: "Rasoolpura", bio: "Dr. Ryan Carter is an orthodontist providing orthodontic treatment for children and adults...", contact: { phone: "9456789012", email: "dr.ryan@example.com", website: "https://example.com/drryan" }},
+            { name: "Dr. Abigail Green", specialization: "Gynecologist", experience: "20 years", location: "Koti", bio: "Dr. Abigail Green is a gynecologist specializing in women's reproductive health...", contact: { phone: "9567890123", email: "dr.abigail@example.com", website: "https://example.com/drabigail" }},
+            { name: "Dr. Ethan Adams", specialization: "Pediatrician", experience: "14 years", location: "Afzulgunj", bio: "Dr. Ethan Adams specializes in pediatric care for infants, children, and adolescents...", contact: { phone: "9678901234", email: "dr.ethan@example.com", website: "https://example.com/drethan" }},
+            { name: "Dr. Harper Lewis", specialization: "Psychiatrist", experience: "16 years", location: "Gatkesar", bio: "Dr. Harper Lewis is a psychiatrist providing mental health evaluation and treatment...", contact: { phone: "6789012345", email: "dr.harper@example.com", website: "https://example.com/drharper" }},
+            { name: "Dr. Lucas Turner", specialization: "Dentist", experience: "13 years", location: "BibiNagar", bio: "Dr. Lucas Turner is a dentist offering comprehensive dental care services...", contact: { phone: "7890123456", email: "dr.lucas@example.com", website: "https://example.com/drlucas" }},
+            { name: "Dr. Natalie Martinez", specialization: "Allergist", experience: "11 years", location: "Kendra Nagar", bio: "Dr. Natalie Martinez specializes in diagnosing and treating allergies and immune system disorders...", contact: { phone: "9012345678", email: "dr.natalie@example.com", website: "https://example.com/drnatalie" }},
+            { name: "Dr. Benjamin Hill", specialization: "Plastic Surgeon", experience: "18 years", location: "Boduppal", bio: "Dr. Benjamin Hill is a plastic surgeon known for his expertise in cosmetic and reconstructive procedures...", contact: { phone: "9123456789", email: "dr.benjamin@example.com", website: "https://example.com/drbenjamin" }},
+            { name: "Dr. Zoey Clark", specialization: "Dermatologist", experience: "14 years", location: "Hayath Nagar", bio: "Dr. Zoey Clark specializes in medical and surgical dermatology...", contact: { phone: "9834567890", email: "dr.zoey@example.com", website: "https://example.com/drzoey" }},
+            { name: "Dr. Austin Rodriguez", specialization: "Otolaryngologist", experience: "17 years", location: "Saroor Nagar", bio: "Dr. Austin Rodriguez is an otolaryngologist providing care for ear, nose, and throat disorders...", contact: { phone: "6345678901", email: "dr.austin@example.com", website: "https://example.com/draustin" }},
+            { name: "Dr. Victoria Turner", specialization: "Obstetrician", experience: "15 years", location: "DilshukNagar", bio: "Dr. Victoria Turner is an obstetrician providing prenatal care and childbirth services...", contact: { phone: "9456789012", email: "dr.victoria@example.com", website: "https://example.com/drvictoria" }},
+            { name: "Dr. Gabriel White", specialization: "Podiatrist", experience: "12 years", location: "Mettuguda", bio: "Dr. Gabriel White specializes in foot and ankle care for patients of all ages...", contact: { phone: "5667890123", email: "dr.gabriel@example.com", website: "https://example.com/drgabriel" }},
+            { name: "Dr. Audrey Hill", specialization: "Family Physician", experience: "20 years", location: "Tarnaka", bio: "Dr. Audrey Hill provides primary care services for individuals and families...", contact: { phone: "9678901234", email: "dr.audrey@example.com", website: "https://example.com/draudrey" }},
+            { name: "Dr. Henry Parker", specialization: "Neonatologist", experience: "16 years", location: "ShamShabad", bio: "Dr. Henry Parker specializes in caring for newborn infants in neonatal intensive care units...", contact: { phone: "6789012345", email: "dr.henry@example.com", website: "https://example.com/drhenry" }},
+            { name: "Dr. Leah Moore", specialization: "Geriatrician", experience: "14 years", location: "Malakpet", bio: "Dr. Leah Moore specializes in providing medical care for elderly patients...", contact: { phone: "7890123456", email: "dr.leah@example.com", website: "https://example.com/drleah" }},
+            { name: "Dr. Max Young", specialization: "Sports Medicine Physician", experience: "17 years", location: "Gachibowli", bio: "Dr. Max Young specializes in treating sports-related injuries and promoting physical fitness...", contact: { phone: "9012345678", email: "dr.max@example.com", website: "https://example.com/drmax" }},
+            { name: "Dr. Clara Martinez", specialization: "Psychologist", experience: "13 years", location: "Golconda", bio: "Dr. Clara Martinez is a clinical psychologist providing therapy and counseling services...", contact: { phone: "9123456789", email: "dr.clara@example.com", website: "https://example.com/drclara" }},
+            { name: "Dr. Isaac Adams", specialization: "Rheumatologist", experience: "19 years", location: "Uppal", bio: "Dr. Isaac Adams specializes in diagnosing and treating rheumatic diseases...", contact: { phone: "6234567890", email: "dr.isaac@example.com", website: "https://example.com/drisaac" }},
+            { name: "Dr. Julia Turner", specialization: "Dietitian", experience: "15 years", location: "Nacharam", bio: "Dr. Julia Turner is a registered dietitian providing nutrition counseling and dietary advice...", contact: { phone: "9345678901", email: "dr.julia@example.com", website: "https://example.com/drjulia" }},
+            { name: "Dr. Owen Green", specialization: "Chiropractor", experience: "18 years", location: "B.N Reddy", bio: "Dr. Owen Green is a chiropractor specializing in spinal adjustments and musculoskeletal therapy...", contact: { phone: "6253589510", email: "dr.owen@example.com", website: "https://example.com/drowen" }}
+        ];
+
+        const doctorList = document.getElementById('doctor-list');
+
+        doctors.forEach(doctor => {
+            const doctorCard = document.createElement('div');
+            doctorCard.classList.add('doctor-card');
+
+            const doctorInfo = `
+                <div class="doctor-card-wrapper">
+                    <img class="doctor-image" src="assets/images/doctor.jpeg" alt="${doctor.name}" />
+                    <div class="doctor-info">
+                        <h3>${doctor.name}</h3>
+                        <p><strong>Specialization:</strong> ${doctor.specialization}</p>
+                        <p><strong>Experience:</strong> ${doctor.experience}</p>
+                        <p><strong>Location:</strong> ${doctor.location}</p>
+                        <p>${doctor.bio}</p>
+                        <div class="doctor-contact">
+                            <p>Contact:</p>
+                            <p>Phone: ${doctor.contact.phone}</p>
+                            <p>Email: <a href="mailto:${doctor.contact.email}">${doctor.contact.email}</a></p>
+                            <p>Website: <a href="${doctor.contact.website}" target="_blank">${doctor.contact.website}</a></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            doctorCard.innerHTML = doctorInfo;
+            doctorList.appendChild(doctorCard);
+        });
+    </script>
+</body>
+</html>
+
+
+
+

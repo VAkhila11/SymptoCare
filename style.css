@@ -1,0 +1,116 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  font-size: 120%;
+  background: #F8F8FF;
+}
+
+.header {
+  width: 30%;
+  margin: 50px auto 0px;
+  color: white;
+  background: #5F9EA0;
+  text-align: center;
+  border: 1px solid #B0C4DE;
+  border-bottom: none;
+  border-radius: 10px 10px 0px 0px;
+  padding: 20px;
+}
+form, .content {
+  width: 30%;
+  margin: 0px auto;
+  padding: 20px;
+  border: 1px solid #B0C4DE;
+  background: white;
+  border-radius: 0px 0px 10px 10px;
+}
+.input-group {
+  margin: 10px 0px 10px 0px;
+}
+.input-group label {
+  display: block;
+  text-align: left;
+  margin: 3px;
+}
+.input-group input {
+  height: 30px;
+  width: 93%;
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
+.btn {
+  padding: 10px;
+  font-size: 15px;
+  color: white;
+  background: #5F9EA0;
+  border: none;
+  border-radius: 5px;
+}
+.error {
+  width: 92%; 
+  margin: 0px auto; 
+  padding: 10px; 
+  border: 1px solid #a94442; 
+  color: #a94442; 
+  background: #f2dede; 
+  border-radius: 5px; 
+  text-align: left;
+}
+.success {
+  color: #3c763d; 
+  background: #dff0d8; 
+  border: 1px solid #3c763d;
+  margin-bottom: 20px;
+}
+
+/* Common button styles */
+button, .logout-link {
+  padding: 12px 20px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* Specific styles for the navigate button */
+#navigateButton {
+  background-color: #066d70; /* Background color */
+}
+
+#navigateButton:hover {
+  background-color: #56ebeb; /* Lighter background on hover */
+  transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+#navigateButton:active {
+  background-color: #96dada; /* Even lighter background on click */
+  transform: scale(1); /* Reset transform on click */
+}
+
+/* Specific styles for the logout link */
+.logout-link {
+  background-color: #ff4d4d; /* Background color */
+  text-decoration: none; /* Remove underline */
+}
+
+.logout-link:hover {
+  background-color: #ff3333; /* Darker background on hover */
+  transform: scale(1.05); /* Slightly enlarge link on hover */
+}
+
+.logout-link:active {
+  background-color: #cc0000; /* Even darker background on click */
+  transform: scale(1); /* Reset transform on click */
+}
+
